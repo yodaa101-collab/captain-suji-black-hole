@@ -1,0 +1,41 @@
+Cadet lane (701 equally spaced heights): { success: 502, fall: 129, drift: 70 } 71.61% success
+Cadet success stripes: [ { min: 186, max: 434 }, { min: 566, max: 814 } ]
+[
+  {
+    "level": "cadet",
+    "samples": 3000,
+    "counts": {
+      "success": 2150,
+      "fall": 554,
+      "drift": 296
+    },
+    "above": 1075,
+    "below": 1075,
+    "coverage": "71.67%"
+  },
+  {
+    "level": "pilot",
+    "samples": 3000,
+    "counts": {
+      "success": 1314,
+      "fall": 684,
+      "drift": 1002
+    },
+    "above": 657,
+    "below": 657,
+    "coverage": "43.80%"
+  },
+  {
+    "level": "commander",
+    "samples": 3000,
+    "counts": {
+      "success": 636,
+      "fall": 1095,
+      "drift": 1269
+    },
+    "above": 319,
+    "below": 317,
+    "coverage": "21.20%"
+  }
+]
+PASS: coverage, colour ordering, gravity ratio, stripes, 9000 prediction/flight comparisons, finite paths and landing radii.

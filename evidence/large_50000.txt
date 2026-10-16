@@ -1,0 +1,4 @@
+cadet {"valid":50000,"success":35730,"fall":9265,"drift":5005,"cancelled":0,"pct":71.46,"predictionAvgMs":0.0811,"predictionMaxMs":46.4955}
+pilot {"valid":50000,"success":21965,"fall":11347,"drift":16688,"cancelled":0,"pct":43.93,"predictionAvgMs":0.0765,"predictionMaxMs":4.4044}
+commander {"valid":21067,"success":3993,"fall":5490,"drift":11584,"cancelled":28933,"pct":18.95,"predictionAvgMs":0.0618,"predictionMaxMs":5.2478}
+PASS 150000 random gestures, predictions equal simulation, finite and bounded.

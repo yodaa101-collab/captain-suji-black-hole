@@ -1,53 +1,47 @@
-CAPTAIN SUJI V6 – UPDATED — ACTUAL VERIFICATION RECORD
-Status: RELEASED FOR PEER REVIEW — revised timing acceptance PASSED; browser play testing PENDING
+CAPTAIN SUJI V7b.2 — RELEASE CANDIDATE VERIFICATION
+Date: 2026-10-17
+Status: DEVELOPMENT CANDIDATE. Browser performance and visual acceptance NOT VERIFIED.
 
-a) SYNTAX: PASS — node --check for game/engine.js, game/game.js, tests/engine.test.js, tests/stress.test.js, tests/large.test.js (all exit 0).
-b) UNIT: PASS — node tests/engine.test.js: PASS: coverage, colour ordering, gravity ratio, stripes, 9000 prediction/flight comparisons, finite paths and landing radii.
-   STRESS: PASS — node tests/stress.test.js: PASS: 30094 launches (12000 random per level + edge cases) in 6.8 s. Meter = flight in every case, deterministic, finite, terminating, outcomes match the picture.
+CHANGES
+- Level 1 engine, game logic, layouts and fairness left unchanged.
+- Level 2 planning: frame opacity 0; transition frame opacity eased to 1.
+- Transition: single scene projection with one object draw per visible object, depth-sorted far-to-near. Removed separate top-down/cockpit scene cross-fades.
+- Cinematic: cached planet sprite at resize, cached dust-ring sprite, eased side-on descent and ship-to-limb alignment; result panel positioned in upper screen.
+- Level 2 frame remains a static overlay; cockpit glow has pre-rendered 128/256/512/1024 sprites; CSS background retained.
+- Mini-map fits lane, hole and planet with 10% margin; BH and P labels retained.
+- Release paths: root index.html redirect, .nojekyll, game/index.html and relative game assets.
 
-c) FIVE SEEDED RUNS: PASS — SUJI_SEED=<seed> node tests/stress.test.js, SUJI_RUNS=12000.
-   seed 1: Cadet 71.9%, Pilot 43.7%, Commander valid 19.2%; exit 0
-   seed 42: Cadet 71.7%, Pilot 43.8%, Commander valid 18.7%; exit 0
-   seed 2026: Cadet 72.2%, Pilot 44.2%, Commander valid 19.2%; exit 0
-   seed 777: Cadet 71.9%, Pilot 43.9%, Commander valid 19.2%; exit 0
-   seed 20261016: Cadet 72.1%, Pilot 44.2%, Commander valid 20.2%; exit 0
-   cadet min/max: 71.7% / 72.2%
-   pilot min/max: 43.7% / 44.2%
-   commander min/max: 18.7% / 20.2%
+EXECUTED NODE CHECKS
+PASS: node --check game/cockpit.js
+PASS: node tests/v7b2_contract.test.js (render logic, assets, version, map, touchdown checks)
+PASS: node tests/render_contract.test.js (Level 1 optimized rendering source contract)
+PASS: node tests/ui_contract.test.js (Level 1 UI/discovery contracts)
+PASS: node tests/gesture.test.js (vertical 60, left aim 120, right ignored 120, tiny 20, mode lock 300)
+PASS: node tests/engine.test.js (10,000 deterministic Level 1 prediction/actual comparisons)
 
-d) LARGE RUN: PASS for correctness — node tests/large.test.js, 50,000 random gestures/level, 150,000 total.
-   cadet {"valid":50000,"success":35730,"fall":9265,"drift":5005,"cancelled":0,"pct":71.46,"predictionAvgMs":0.0811,"predictionMaxMs":46.4955}
-   pilot {"valid":50000,"success":21965,"fall":11347,"drift":16688,"cancelled":0,"pct":43.93,"predictionAvgMs":0.0765,"predictionMaxMs":4.4044}
-   commander {"valid":21067,"success":3993,"fall":5490,"drift":11584,"cancelled":28933,"pct":18.95,"predictionAvgMs":0.0618,"predictionMaxMs":5.2478}
-   PASS 150000 random gestures, predictions equal simulation, finite and bounded.
-   Note: valid Commander launches 21,067/50,000; 28,933 gestures cancelled.
+LEVEL 2 TRANSITION BLACK HOLE COUNT
+Expected by one-object draw code: 1 black-hole sprite per transition frame when in view.
+Actual screenshots at 0.2, 0.4, 0.6, 0.8, 1.0 s: NOT MEASURED — browser navigation blocked.
+Use ?debug=1 and inspect window.__sujiV7b2.transitionBlackHoleSprites during the transition.
 
-e) EDGE CASES: PASS — tests/stress.test.js covers lane 150/500/850, near-boundary heights, pull lengths 0/1/27/28/29/179.999/180/250 and 8 directions; forward/short Commander pulls cancel. Heading checked at ±30°.
-f) DETERMINISM: PASS — stress test simulates each valid input twice and compares final x/y and outcomes.
-g) PERFORMANCE: PASS under Vikas's revised acceptance rule (100 warm-up predictions per level, then 10,000 measured predictions per level; average <1 ms and at least 99% under 8 ms).
-   Command: node /mnt/data/suji_timing_benchmark.js (standalone benchmark run against this source; benchmark is also included as tests/timing.test.js for reproduction).
-   cadet: warmup=100, measured=10000, average=0.2382 ms, p99=0.5413 ms, maximum=2.0170 ms, under8ms=100.000%, PASS=true
-   pilot: warmup=100, measured=10000, average=0.2263 ms, p99=0.5065 ms, maximum=21.7107 ms, under8ms=99.990%, PASS=true
-   commander: warmup=100, measured=10000, average=0.0639 ms, p99=0.2261 ms, maximum=1.9947 ms, under8ms=100.000%, PASS=true
-   Earlier 46.4955 ms Cadet outlier retained as a warm-up/scheduling-spike observation in the prior large run; the cause was not proven.
-   This benchmark also observed a 21.7107 ms Pilot maximum despite meeting the percentile rule. Timing varies with machine load.
-h) BROWSER PLAY: Pending – to be done by Vikas's reviewer in a separate browser environment.
-   Previous attempt: Playwright Chromium launched, but file:/// and localhost navigation returned net::ERR_BLOCKED_BY_ADMINISTRATOR.
-   No browser play test or screenshots are claimed to have passed.
-i) RECONCILIATION PASS 1: PASS for currently reported settings/percentages — sensitivity 0.5; Commander arrival 150; seed 20261016 Cadet 72.1%, Pilot 44.2%, Commander 20.2% valid. README and technical review reflect these.
-   PASS 2: clean copied folder syntax/engine/stress re-run exit 0, same seeded coverage and outcomes. Timing values differ as expected across runs; percentage numbers matched.
-j) SCOPE DIFF: game/engine.js: sensitivity 0.14→0.5 only. game/game.js: unchanged. game/style.css/index.html/ship.png/manifest: unchanged. tests/stress.test.js: threshold 11–15→18–24%, 60° output-angle assertion→30°, environment-driven seed and count for required multi-seed runs. tests/large.test.js and tests/browser_check.py: verification scripts added. README/docs/test-results: rewritten to reconcile outdated conflicting historical statements and document current result.
+LEVEL 2 TOUCHDOWN
+Geometric target from animation formula: bottom edge coincides with the defined limb at t >= 1.8 s (nominal gap 0 px).
+Measured screenshot gap: NOT MEASURED — browser navigation blocked.
+Measured panel/ship overlap: NOT MEASURED — browser navigation blocked.
+Debug values: window.__sujiV7b2.touchdownGapPx, resultOverlapsShip.
 
-RELEASE DECISION: Vikas accepted the revised percentile-based timing criterion and requested release with browser testing pending. This is a peer-review release, not a browser-validated iPad release.
-No screenshots were fabricated.
+FRAME-TIME TARGETS (DPR 2)
+phase                 1x target     1x measured     4x target     4x measured
+planning              p95 <=17.5ms  PENDING         p95 <=20ms    PENDING
+launchTransition      p95 <=17.5ms  PENDING         p95 <=20ms    PENDING
+cockpit               p95 <=17.5ms  PENDING         p95 <=20ms    PENDING
+landingCinematic      p95 <=17.5ms  PENDING         p95 <=20ms    PENDING
+ending/fall           p95 <=17.5ms  PENDING         p95 <=20ms    PENDING
+No frame >33ms during transitions: PENDING.
 
+FAIRNESS
+Level 1 and Level 2 physics were not modified. No new fairness runs performed in this revision.
+Prior V7b.1 measured fairness: 490/492 landings, 121/123 pairs >=98% (2 pairs failed), median 9.175s, longest 27.954s. These are prior results, not a new pass.
 
-V6 DISCOVERY AND ORBIT FIXES — verification (2026-10-16)
-- `node --check game/game.js`: PASS (exit 0).
-- `node tests/engine.test.js`: PASS (exit 0); output: PASS: coverage, colour ordering, gravity ratio, stripes, 9000 prediction/flight comparisons, finite paths and landing radii.
-- `node tests/stress.test.js`: PASS (exit 0); output: PASS: 30094 launches (12000 random per level + edge cases) in 7.4 s. Meter = flight in every case, deterministic, finite, terminating, outcomes match the picture.
-- Browser GRAVITY unlock/persistence: NOT VERIFIED. Chromium navigation to local HTTP and file:// was blocked by environment (net::ERR_BLOCKED_BY_ADMINISTRATOR).
-- Browser drift reason equality on Cadet, Pilot, Commander: NOT VERIFIED for the same reason. Code inspection confirms `speak(reason)` for drift.
-- Browser SPAGHETTI after 3 falls with reload between: NOT VERIFIED for the same reason. Code inspection confirms immediate `save()` after `store.falls++`.
-- Browser checks remain pending for Vikas's reviewer in a separate browser environment. No browser success claimed.
-- Scope: gameplay code changed only game/game.js; README.md and test-results.txt updated as requested.
+BROWSER LIMITATION
+Chromium navigation to localhost and file:// returned ERR_BLOCKED_BY_ADMINISTRATOR. No browser screenshots or frame timings can be claimed. External reviewer must validate before GitHub Pages release.

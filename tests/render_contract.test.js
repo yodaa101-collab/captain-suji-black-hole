@@ -1,0 +1,17 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const game=fs.readFileSync('game/game.js','utf8'),engine=fs.readFileSync('game/engine.js','utf8'),html=fs.readFileSync('game/index.html','utf8');
+const render=game.slice(game.indexOf('function render(dt)'),game.indexOf('window.__sujiDiagnostics='));
+assert.ok(game.includes('buildSprites()')&&game.includes('sprites.hole')&&game.includes('sprites.planet')&&game.includes('sprites.ship'));
+assert.ok(!render.includes('createRadialGradient')&&!render.includes('drawImage(stars,'),'No gradient construction or star repaint inside render');
+assert.ok(game.includes('Math.sqrt(3200000/(cw*ch))'),'Backing store cap');
+assert.ok(game.includes('new Float32Array(16000)')&&game.includes('new Float32Array(240)'),'Typed buffers');
+assert.ok(game.includes('new Path2D()')&&game.includes('Math.ceil(traceCount/300)'),'Decimated ghost paths');
+assert.ok(game.includes('E.advanceInto(')&&engine.includes('function advanceInto('),'Allocation-free flight stepping');
+assert.ok(!game.includes('previewDirty=true;updateMeter()'),'No prediction in pointermove');
+assert.ok(game.includes('launchDeferred=frameSerial+2'),'Deferred launch UI');
+assert.ok(game.includes('endingOrigin={x:flightDrawX,y:flightDrawY'),'Endings from last drawn interpolation');
+assert.ok(game.includes('drawArrowPixels(')&&game.includes('springGravity(')&&game.includes('flightAge<2'),'Gravity and aim arrows');
+assert.ok(html.includes('id="debugPanel"')&&game.includes("get('debug')==='1'"),'Debug overlay');
+console.log('PASS: static render contracts (sprite caches, static stars, DPR cap, typed traces, Path2D, deferred launch, ending origin, gravity arrow, debug).');
+console.log('PENDING: frame-time, 4x CPU, screenshot and visual correctness on real browser/iPad.');

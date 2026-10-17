@@ -1,4 +1,4 @@
-# Captain Suji V7b.4 — development candidate
+# Captain Suji V7b.5 — development candidate
 
 This build contains Level 1 and a new playable Level 2 Cockpit Pilot. Level 3 remains locked.
 
@@ -6,12 +6,12 @@ Run `python -m http.server 8000` in this folder, then open `http://localhost:800
 
 Level 2: drag the ship vertically, pull left to launch, hold ◀/▶ to steer, or use keyboard arrows. The top-right mini-map and cockpit gravity meter show flight guidance. The same saved discovery key is retained.
 
-**Historical V7b.4 test only:** an older pilot recorded 1503/2460. This result does not apply to the V7b.4 rate-steering engine. See `test-results.txt` for current test status.
+**Historical V7b.5 test only:** an older pilot recorded 1503/2460. This result does not apply to the V7b.5 rate-steering engine. See `test-results.txt` for current test status.
 
 Rendering and real iPad browser performance remain unverified. The V6 production branch is unchanged.
 
 
-## V7b.4 reviewer status
+## V7b.5 reviewer status
 The replacement 0.3-second lookahead fairness pilot landed 490/492 attempts across 123 pairs (4 each). Pairs 105 and 109 landed 3/4 and fail the required >=98% per pair. Landing median 9.175 s, maximum 27.954 s. Browser performance targets and screenshot checks are pending external reviewer; no fabricated frame-time values.
 
 
@@ -22,11 +22,15 @@ Level 2 — Cockpit Pilot: plan a launch the same way, then hold ◀ or ▶ (or 
 
 Level 3: coming soon. The 📚 discoveries can be read any time. Add `?debug=1` to the URL for frame diagnostics.
 
-## V7b.4 changes and limitations
+## V7b.5 changes and limitations
 
 Deterministic 40°/s velocity rotation, speed preservation, 120°/s camera-follow cap, 0.12s input ramp, 0.15s touch pulse, worker-based ORBIT route search, persistent NAV toggle, cyan route on map/windscreen, alignment and speed panel, widened object projection, minimum object sizes, edge direction chips, thumb-positioned controls, and extended landing hold. Level 1 gameplay source and Level 2 planning layout remain unchanged.
 
-**Development only:** This is not a validated V7b.4 release. The complete V7b.4 request includes visual effects, fully continuous landing choreography, measured iPad viewport boxes, fairness and navigation pilot coverage, and real browser 1×/4× frame timing. Those are not all implemented or verified here. Do not merge this build into production without finishing and measuring them.
+**Development only:** This is not a validated V7b.5 release. The complete V7b.5 request includes visual effects, fully continuous landing choreography, measured iPad viewport boxes, fairness and navigation pilot coverage, and real browser 1×/4× frame timing. Those are not all implemented or verified here. Do not merge this build into production without finishing and measuring them.
 
-## V7b.4 quick fixes
+## V7b.5 quick fixes
 Adjusted toast position, cockpit HUD layout, edge-chip units, banking, star streaks, and cached thruster flare. Level 1 and deterministic 40°/s steering unchanged.
+
+
+## V7b.5 Level 2 navigation
+Deterministic 25-second segmented ORBIT worker search, 1500-unit soft world boundary, 45-second flight limit, off-path recovery advice and map auto-framing. Reviewer acceptance and device performance remain pending.

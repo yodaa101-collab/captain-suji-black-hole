@@ -1,22 +1,29 @@
-CAPTAIN SUJI V7b.4 — QUICK FIX TEST RESULTS (2026-10-17)
-STATUS: DEVELOPMENT BUILD — BROWSER ACCEPTANCE NOT VERIFIED.
+CAPTAIN SUJI V7b.5 — DEVELOPMENT TEST RESULTS (2026-10-17)
+STATUS: IMPLEMENTED DEVELOPMENT BUILD — NOT RELEASE ACCEPTED.
 
-PASS: node --check game/cockpit.js.
-PASS: tests/render_contract.test.js.
-PASS: tests/ui_contract.test.js.
-PASS: tests/v7b2_contract.test.js.
-PASS: tests/v7b3_steering.test.js: deterministic turn = 40.0000 degrees in 1 second at speeds 150, 260, 380.
+PASS: node --check game/nav_worker.js
+PASS: node --check game/cockpit.js
+PASS: tests/v7b5_contract.test.js (25-second worker, multi-segment candidates, guidance, 1500-unit boundary, 45-second cutoff)
+PASS: tests/v7b3_steering.test.js (40.0000 degrees per second at speeds 150, 260, 380)
+PASS: tests/v7b2_contract.test.js
+PASS: tests/render_contract.test.js
+PASS: tests/ui_contract.test.js
 
-SOURCE CHANGES:
-- Discovery toast moved to bottom of viewport while Level 2 is active; result panel remains at top.
-- Alignment bar centred with minimum 360px; hint below; NAV and speed relocated to lower dashboard.
-- Edge chips use full 'ship lengths' wording and are inset from edges.
-- Added 5-degree steering-responsive windscreen bank, nearby star streaks, cached thruster flare.
-- Landing geometry still computes final ship-bottom to limb contact at nominal 0 CSS px, with cached dust ring and >=1s hold before result; no browser measurement.
+IMPLEMENTATION:
+- Worker candidate list: coast, single turn 0.15–8 s, turn–coast–turn.
+- Worker searches in short asynchronous batches, reporting a provisional first landing route and refining to minimum steering/earliest landing.
+- A valid previous plan is retained while it still predicts landing from current state.
+- Route path includes all planned segments, with contextual hold/coast guidance.
+- Level 2 world margin extends 1500 units; 45 s maximum flight time.
+- Mini-map includes ship in its extent and zooms to accommodate out-of-bounds flight.
+- No-route guidance indicates predicted coast fall or planet bearing.
 
-NOT VERIFIED — DO NOT REPRESENT AS MEASURED:
-- Element bounding boxes and overlap at 1366x1024, 1194x834, 1024x768.
-- Actual rendered touchdown gap <=3px and toast/title overlap.
-- Browser/iPad p95 <=17.5ms at 1x.
-- End-to-end landing cinematic quality.
-GitHub not updated by this package creation.
+REQUIRED ACCEPTANCE MEASUREMENTS NOT PERFORMED — NO NUMBERS CLAIMED:
+- 1000-case wild launch route availability within 0.5 s (target >=95%).
+- Truly unrecoverable fall rate on those 1000 states.
+- 1000-case follow-the-indicator pilot landing rate (target >=95%).
+- Normal-launch route availability (target >=99.5%).
+- Real iPad/browser p95 <=17.5ms at 1x, including worker contention.
+
+CAUTION: A physical landing path cannot be guaranteed from every reachable state.
+The reviewer acceptance targets have NOT been established; do not deploy to a child as an accepted build without measuring them.

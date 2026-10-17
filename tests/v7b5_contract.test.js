@@ -1,0 +1,14 @@
+const fs=require('fs'),assert=require('assert'),E=require('../game/level2_engine');
+const worker=fs.readFileSync('game/nav_worker.js','utf8'),cockpit=fs.readFileSync('game/cockpit.js','utf8');
+assert(worker.includes('Math.ceil(25/DT)'));
+assert(worker.includes('2.4,3,4,5,6,8'));
+assert(worker.includes('for(const coast of [1,2,3])'));
+assert(worker.includes('setTimeout(step,0)'));
+assert(worker.includes('last=j.best?j.best.segments:null'));
+assert(cockpit.includes('TURN TOWARD THE PLANET'));
+assert(cockpit.includes('TOO CLOSE – STEER AWAY!'));
+assert(cockpit.includes('TURN BACK – PLANET THIS WAY'));
+assert(cockpit.includes('flightTime>=45'));
+assert(E.terminal({x:-1499,y:900,vx:0,vy:0},{hole:{x:1550,y:300},planet:{x:3500,y:900}})===null);
+assert(E.terminal({x:-1501,y:900,vx:0,vy:0},{hole:{x:1550,y:300},planet:{x:3500,y:900}})==='drift');
+console.log('PASS: V7b.5 worker search, segmented plans, guidance, 1500-unit margin and 45-second cutoff contracts');

@@ -43,3 +43,26 @@
 #cockpitResult{top:5%;max-width:420px;z-index:6}
 #cockpitFrameCanvas{transition:none}
 #cockpitControls,#cockpitHud,#cockpitHelp{transition:opacity .3s ease}
+
+/* V7b.3: thumb controls and ORBIT HUD */
+#cockpitControls button{position:absolute;bottom:auto;top:62%;transform:translateY(-50%);width:112px;height:112px;border-radius:28px;background:rgba(13,28,48,.7);border:3px solid #f2c868;font-size:52px;z-index:7;touch-action:none;box-shadow:0 0 20px #0008}
+#steerLeft{left:24px}#steerRight{right:24px}
+#cockpitControls button::before{content:"";position:absolute;inset:-44px -19px;pointer-events:auto}
+#cockpitControls button.pressed{background:#c89936;transform:translateY(-50%) scale(.94)}
+#cockpitMap{width:min(300px,29vw);height:190px;object-fit:fill}
+#navPanel{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:5;display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:12px;background:#07192bbf;color:#e4f4ff;font-size:13px}
+#navAlignment{min-width:160px;display:flex;flex-direction:column;align-items:center;gap:2px;border-top:2px solid #6d9ca9;position:relative}
+#navArrow{color:#f8c864;transition:transform .1s linear}#navAlignment[data-zone="green"]{color:#60ffb4}#navAlignment[data-zone="amber"]{color:#ffc765}#navAlignment[data-zone="red"]{color:#ff7272}
+#navSwitch{font-size:12px;padding:8px;background:#153f58;border:1px solid #7ab7cb;border-radius:8px;color:white;pointer-events:auto}#navSpeed{white-space:nowrap}
+@media(max-width:1050px){#navPanel{top:6px;font-size:11px}#cockpitMap{width:250px;height:160px}#cockpitControls button{width:96px;height:96px;font-size:45px}}
+
+/* V7b.4 targeted fixes: top alignment, dashboard controls, title-safe toast */
+#navPanel{top:8px;left:50%;transform:translateX(-50%);width:clamp(360px,36vw,490px);min-height:45px;box-sizing:border-box;justify-content:center;padding:7px 12px;pointer-events:none}
+#navAlignment{min-width:360px;width:100%;border-top:2px solid #6d9ca9;white-space:nowrap}
+#cockpitHelp{top:68px;left:50%;transform:translateX(-50%);max-width:360px;text-align:center;white-space:nowrap;z-index:5}
+#navBottom{display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:auto;white-space:nowrap}
+#navSwitch{padding:5px 9px}#navSpeed{font-size:12px}
+#cockpitHud{width:min(570px,52vw);gap:12px}
+#cockpitLevel2:not(.hidden)~#discoveryToast{position:fixed;top:auto;bottom:5%;left:50%;transform:translateX(-50%);max-width:340px;text-align:center;z-index:25;font-size:16px;padding:8px 14px}
+#cockpitResult{top:5%;max-width:420px;z-index:6}
+@media(max-width:1050px){#navPanel{width:360px;top:6px}#navAlignment{min-width:350px}#cockpitHelp{top:65px}#cockpitHud{width:min(560px,54vw)}}

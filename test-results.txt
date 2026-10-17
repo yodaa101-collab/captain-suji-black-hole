@@ -1,47 +1,22 @@
-CAPTAIN SUJI V7b.2 — RELEASE CANDIDATE VERIFICATION
-Date: 2026-10-17
-Status: DEVELOPMENT CANDIDATE. Browser performance and visual acceptance NOT VERIFIED.
+CAPTAIN SUJI V7b.4 — QUICK FIX TEST RESULTS (2026-10-17)
+STATUS: DEVELOPMENT BUILD — BROWSER ACCEPTANCE NOT VERIFIED.
 
-CHANGES
-- Level 1 engine, game logic, layouts and fairness left unchanged.
-- Level 2 planning: frame opacity 0; transition frame opacity eased to 1.
-- Transition: single scene projection with one object draw per visible object, depth-sorted far-to-near. Removed separate top-down/cockpit scene cross-fades.
-- Cinematic: cached planet sprite at resize, cached dust-ring sprite, eased side-on descent and ship-to-limb alignment; result panel positioned in upper screen.
-- Level 2 frame remains a static overlay; cockpit glow has pre-rendered 128/256/512/1024 sprites; CSS background retained.
-- Mini-map fits lane, hole and planet with 10% margin; BH and P labels retained.
-- Release paths: root index.html redirect, .nojekyll, game/index.html and relative game assets.
+PASS: node --check game/cockpit.js.
+PASS: tests/render_contract.test.js.
+PASS: tests/ui_contract.test.js.
+PASS: tests/v7b2_contract.test.js.
+PASS: tests/v7b3_steering.test.js: deterministic turn = 40.0000 degrees in 1 second at speeds 150, 260, 380.
 
-EXECUTED NODE CHECKS
-PASS: node --check game/cockpit.js
-PASS: node tests/v7b2_contract.test.js (render logic, assets, version, map, touchdown checks)
-PASS: node tests/render_contract.test.js (Level 1 optimized rendering source contract)
-PASS: node tests/ui_contract.test.js (Level 1 UI/discovery contracts)
-PASS: node tests/gesture.test.js (vertical 60, left aim 120, right ignored 120, tiny 20, mode lock 300)
-PASS: node tests/engine.test.js (10,000 deterministic Level 1 prediction/actual comparisons)
+SOURCE CHANGES:
+- Discovery toast moved to bottom of viewport while Level 2 is active; result panel remains at top.
+- Alignment bar centred with minimum 360px; hint below; NAV and speed relocated to lower dashboard.
+- Edge chips use full 'ship lengths' wording and are inset from edges.
+- Added 5-degree steering-responsive windscreen bank, nearby star streaks, cached thruster flare.
+- Landing geometry still computes final ship-bottom to limb contact at nominal 0 CSS px, with cached dust ring and >=1s hold before result; no browser measurement.
 
-LEVEL 2 TRANSITION BLACK HOLE COUNT
-Expected by one-object draw code: 1 black-hole sprite per transition frame when in view.
-Actual screenshots at 0.2, 0.4, 0.6, 0.8, 1.0 s: NOT MEASURED — browser navigation blocked.
-Use ?debug=1 and inspect window.__sujiV7b2.transitionBlackHoleSprites during the transition.
-
-LEVEL 2 TOUCHDOWN
-Geometric target from animation formula: bottom edge coincides with the defined limb at t >= 1.8 s (nominal gap 0 px).
-Measured screenshot gap: NOT MEASURED — browser navigation blocked.
-Measured panel/ship overlap: NOT MEASURED — browser navigation blocked.
-Debug values: window.__sujiV7b2.touchdownGapPx, resultOverlapsShip.
-
-FRAME-TIME TARGETS (DPR 2)
-phase                 1x target     1x measured     4x target     4x measured
-planning              p95 <=17.5ms  PENDING         p95 <=20ms    PENDING
-launchTransition      p95 <=17.5ms  PENDING         p95 <=20ms    PENDING
-cockpit               p95 <=17.5ms  PENDING         p95 <=20ms    PENDING
-landingCinematic      p95 <=17.5ms  PENDING         p95 <=20ms    PENDING
-ending/fall           p95 <=17.5ms  PENDING         p95 <=20ms    PENDING
-No frame >33ms during transitions: PENDING.
-
-FAIRNESS
-Level 1 and Level 2 physics were not modified. No new fairness runs performed in this revision.
-Prior V7b.1 measured fairness: 490/492 landings, 121/123 pairs >=98% (2 pairs failed), median 9.175s, longest 27.954s. These are prior results, not a new pass.
-
-BROWSER LIMITATION
-Chromium navigation to localhost and file:// returned ERR_BLOCKED_BY_ADMINISTRATOR. No browser screenshots or frame timings can be claimed. External reviewer must validate before GitHub Pages release.
+NOT VERIFIED — DO NOT REPRESENT AS MEASURED:
+- Element bounding boxes and overlap at 1366x1024, 1194x834, 1024x768.
+- Actual rendered touchdown gap <=3px and toast/title overlap.
+- Browser/iPad p95 <=17.5ms at 1x.
+- End-to-end landing cinematic quality.
+GitHub not updated by this package creation.

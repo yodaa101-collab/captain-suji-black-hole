@@ -25,7 +25,7 @@ function tick(dt){if(phase==='planning'){if(gesture&&gesture.mode==='aim'&&++pre
  steerSmooth+=clamp(targetSteer-steerSmooth,-dt/.12,dt/.12);
  steer=steerSmooth;acc+=dt;let n=0;while(acc>=E.DT&&n++<30){const tmp=prev;prev=state;state=tmp;E.advanceInto(prev,scene,steer,state);acc-=E.DT;flightTime+=E.DT;const a=Math.atan2(state.vy,state.vx);flightTurn+=angleDiff(a,lastHeading);lastHeading=a;if((traceStep++&3)===0&&trailCount<10000){trail[trailCount*2]=state.x;trail[trailCount*2+1]=state.y;trailCount++;}const end=flightTime>=45?'drift':E.terminal(state,scene);if(end){outcome=end;phase=end==='success'?'landingCinematic':'ending';cinematic=0;landingFromPrediction=false;landingX=state.x;landingY=state.y;landingVX=state.vx;landingVY=state.vy;break;}}
  if(phase==='cockpit'&&navWorker&&flightTime-navAt>=.25){navAt=flightTime;navWorker.postMessage({id:++navSeq,state:{...state},scene});}
- if(phase==='cockpit'&&(state.x<0||state.x>E.W||state.y<0||state.y>E.H)&&flightTime-navBoundaryAt>=6){navBoundaryAt=flightTime;speak('Turn back, Captain! The Planet is this way');}
+ if(phase==='cockpit'&&(state.x<0||state.x>E.W||state.y<0||state.y>E.H)&&flightTime-navBoundaryAt>=6){navBoundaryAt=flightTime;const p=angleDiff(Math.atan2(scene.planet.y-state.y,scene.planet.x-state.x),Math.atan2(state.vy,state.vx));speak(p<0?'Turn left, Captain!':'Turn right, Captain!');}
  if(phase==='cockpit'&&++predFrame%8===0){gravityPredict();const q={x:state.x,y:state.y,vx:state.vx,vy:state.vy},o={x:0,y:0,vx:0,vy:0};coastCount=0;for(let i=0;i<720;i++){E.advanceInto(q,scene,0,o);q.x=o.x;q.y=o.y;q.vx=o.vx;q.vy=o.vy;if(i%10===0&&coastCount<72){coastDots[coastCount*2]=q.x;coastDots[coastCount*2+1]=q.y;coastCount++;}if(E.terminal(q,scene))break;}if(pred&&pred.outcome==='success'&&pred.duration<=2.5){phase='landingCinematic';cinematic=0;outcome='success';landingFromPrediction=true;landingX=state.x;landingY=state.y;landingVX=state.vx;landingVY=state.vy;}if(pred&&pred.outcome==='fall'&&pred.duration<4&&performance.now()-warningAt>6000){warningAt=performance.now();speak('DANGER – steer away!');}}}
  else if(phase==='landingCinematic'||phase==='ending'){if(phase==='landingCinematic'&&landingFromPrediction&&cinematic<1.6){acc+=dt;let n=0;while(acc>=E.DT&&n++<30){const tmp=prev;prev=state;state=tmp;E.advanceInto(prev,scene,0,state);acc-=E.DT;flightTime+=E.DT;if(E.terminal(state,scene)){landingFromPrediction=false;break;}}}cinematic+=dt;if(cinematic>4.5){phase='result';$('cockpitResultTitle').textContent=outcome==='success'?'🎉 Mission Complete!':outcome==='fall'?'WHOOSH! Escape pod launched!':'Lost in space!';$('cockpitResult').classList.remove('hidden');if(outcome==='success')window.dispatchEvent(new Event('sujiPilotLanding'));if(outcome!=='fall'&&Math.abs(flightTurn)>=Math.PI)window.dispatchEvent(new Event('sujiPilotOrbit'));}}
  const target=Math.atan2(state.vy,state.vx),d=angleDiff(target,heading),w=7;headingVel+=(w*w*d-2*w*headingVel)*dt;heading+=clamp(headingVel*dt,-2*Math.PI/3*dt,2*Math.PI/3*dt);const spring=13;meterVelocity+=(spring*spring*(meterTarget-meterValue)-2*spring*meterVelocity)*dt;meterValue+=meterVelocity*dt;$('cockpitNeedle').style.transform='translateY('+(clamp(meterValue,0,1)*80)+'px)';$('cockpitMeterText').textContent=pred&&pred.outcome==='success'?'Perfect':phase==='planning'?'Pull back to aim':'Coasting';$('cockpitGreen').style.boxShadow=pred&&pred.outcome==='success'?'0 0 10px 4px #49ff91':'none';}
@@ -79,11 +79,14 @@ function render(dt){
   const planetAngle=angleDiff(Math.atan2(scene.planet.y-state.y,scene.planet.x-state.x),heading);
   const holeAngle=angleDiff(Math.atan2(scene.hole.y-state.y,scene.hole.x-state.x),heading);
   const steerAway=holeAngle<0?1:-1;
-  const bearing=outside?planetAngle:navPlan?dev:navFall?steerAway*40:planetAngle;
-  const advice=outside?'TURN BACK – PLANET THIS WAY':navPlan?(segment&&segment.dir?(segment.dir<0?'STEER ◀ – hold':'STEER ▶ – hold'):'ON PATH ✓ – let go'):navFall?'TOO CLOSE – STEER AWAY!':'TURN TOWARD THE PLANET';
+  // Always show an explicit button direction, including beyond the soft boundary.
+  const direction=outside?(planetAngle<0?-1:1):navPlan?(segment&&segment.dir||0):navFall?steerAway:(planetAngle<0?-1:1);
+  const instruction=direction<0?'◀ TURN LEFT':'TURN RIGHT ▶';
+  const advice=navPlan&&!outside?(direction===0?'✓ ON PATH — LET GO':direction<0?'◀ HOLD LEFT':'HOLD RIGHT ▶'):navFall&&!outside?'⚠ TOO CLOSE — '+instruction:instruction;
   $('navAdvice').textContent=advice;
-  $('navAlignment').dataset.zone=outside?'amber':!navPlan?'red':abs<=3?'green':abs<=12?'amber':'red';
-  $('navArrow').style.transform='translateX('+clamp(bearing/(40*Math.PI/180),-1,1)*68+'px)';
+  $('navArrow').textContent=direction<0?'◀':direction>0?'▶':'✓';
+  $('navArrow').style.transform='translateX('+(direction*55)+'px)';
+  $('navAlignment').dataset.zone=outside?'amber':!navPlan?'red':direction===0?'green':'amber';
   $('cockpitArena').style.boxShadow=outside?'inset 0 0 55px 15px #ffab354d':'';
   if(navPlan&&abs<=3&&coastSuccess&&flightTime-navLockedAt>8){navLockedAt=flightTime;speak('Locked on, Captain!');}
  }

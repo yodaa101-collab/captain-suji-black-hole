@@ -1,0 +1,39 @@
+CAPTAIN SUJI STAGE (d) ? CURRENT WORK LOG / RESUME CHECKPOINT
+Saved 2026-10-19T18:58:16.673170+05:30.
+
+AUTHORIZED OBJECTIVE AND HARD RULES
+Finish the user's full Stage (d) prompt at C:/Users/vikaa/headroom/Suji Game/prompts-V7d.md (?Stage (c) accepted ? FULL Stage (d) prompt? and the learning_pilot reply). Work/write only under C:/Users/vikaa/codex-work. Live V7b.5 at C:/Users/vikaa/Downloads/Suji Captain/7bGitUpload is READ ONLY. Physics and Stage (a) tuning remain frozen. Never run old install_*/finalize_* scripts. Do not deploy. Replace the accepted ZIP only after every required check passes, then stop for user audit.
+
+ZIP / SAFETY
+Accepted ZIP currently SHA256 cde3e18f54a5ad5c1da07b0f59b3a04ad674cfc0c7f06dc3a2ae77ebfe2bafdb (expected accepted Stage (c): cde3e18f54a5ad5c1da07b0f59b3a04ad674cfc0c7f06dc3a2ae77ebfe2bafdb). Do not replace until final aggregate is genuinely all PASS. Packaging helper was hardened to preserve the accepted archive's root layout and verify a temporary archive before replacing; packaging has NOT been run.
+
+COMPLETED AND EVIDENCED
+- Route diagnosis: historical pair1/pair5 failures were not reproduced against either build. Correct follower follows timed steering segments; exact old cause remains unproven. evidence/stage-d/level2-v2/DIAGNOSIS.md.
+- Original 246 comparison passed 246/246 each, p95 164.4ms working vs180.3ms live. Later re-entry clock bug identified/fixed; re-entry comparison proves first worker request approx1.2s current vs live Retry6.95s/re-entry9.33s. Pause-label reset also proven.
+- Later fresh isolated comparison (before current planner optimization) passed all492 routes: working246/246 and live246/246. Latency FAIL: working p95 182.0ms vs live176.8ms. Saved at evidence/stage-d/level2-v2/final-isolated-246-comparison; canonical full-246-comparison currently reflects that truthful result, NOT the old PASS.
+- To address p95, game/nav_worker.js now skips candidate routes requiring strictly more steering than a successful incumbent. Equal steering remains eligible for flight-duration tie break. This preserves existing ranking and physics. `tests/planner_pruning_equivalence.cjs` compared pre-change worker preserved at evidence/stage-d/planner-pruning/nav_worker-before.js against current worker across all246 fixtures: PASS, identical selected plans and paths. Result evidence/stage-d/planner-pruning/equivalence.json includes source hashes; aggregate now requires current nav_worker SHA to match proof.
+- P1/P2 passed before current planner-only change: measured contact gap3px at both sizes; all 4 gauges point to named 500-unit fixtures. `polish-stage-d.log`, evidence/stage-d/polish/probe.json.
+- P3/P4/P5 passed before current planner-only change: radar marks>=6px at1024x768, danger lamp inside instrument, five exits release71106560 canvas bytes to0, heap growth30180 bytes. `stage-d-polish-final.log`, evidence/stage-d/polish-v2/results.json.
+- L1 screenshot audit passed before current planner-only change: 8 before/after screenshots at1180x820 and1366x1024, no exceptions, zero bright canopy pixels in minimap. Plain-language diffs in evidence/stage-d/level2-presentation/report.md.
+- Native tests:16 active PASS; 2 documented legacy-policy FAIL. `stage-d-native-final.log`. New learner 200/200, median3,p90 5,max8; old130/200 retained as retired FAIL with reasons in evidence/stage-d/learning/old-failure-table.md.
+- Exact DEPLOY subset static-server test passed all3 levels before current planner-only change: `evidence/stage-d/static/results.json`; `.nojekyll`, root redirect and required game files only. Harness redirect race was fixed.
+- A first full stress matrix reached S7 but failed S3 Level3 portrait: terminated/re-entering worker failed loading level3_engine.js; recovery itself completed. This is a FAIL, not waived. Evidence retained under evidence/stage-d/stress/final-matrix, pending archive by runner before fresh matrix. Harness server request backlog increased to128; no proof yet that this eliminates worker import error.
+- Frozen physics hashes were independently verified and match accepted stage freeze/live where available. Current aggregate rechecks them.
+- Added exact accepted ZIP member comparison evidence/stage-d/final/accepted-zip-runtime-delta.json and reasons evidence/stage-d/final/runtime-change-reasons.md. Stage(d) game deltas include cockpit.js, nav_worker.js, deep-cockpit.css, level3.js, realistic-art.js, input-guard.css/js and game/index.html. No frozen engine or Stage(a) tuning changes.
+
+CURRENT RUN ? DO NOT DUPLICATE
+Supervisor `run_stage_d_remaining_v2.py` is running as unified exec session27722; log `stage-d-remaining-v2.log`. It verified planner equivalence, and has started fresh 12-window,600-second idle runs for both orientations. Latest observed roughly122s per window; no errors shown. This supervisor is sequential: after both idles it runs native suite, P1/P2, P3?P5, L1 screenshots, exact static subset, then fresh 492-case routes ALONE, requires all land and working p95<=live, then archives failed matrix and runs the full60-case matrix ALONE, then builds aggregate WITHOUT packaging. If any gate fails it stops. Monitor its log and individual output logs/evidence. Do not start competing browser tests.
+
+FILES / HELPFUL COMMANDS
+Project: C:/Users/vikaa/codex-work/Captain_Suji_V7c
+Python: C:/Users/vikaa/AppData/Local/Programs/Python/Python313/python.exe -X utf8
+Current supervisor: run_stage_d_remaining_v2.py; exec session27722; log stage-d-remaining-v2.log.
+Equivalence runner: tests/planner_pruning_equivalence.cjs via Python subprocess with ELECTRON_RUN_AS_NODE=1. It passed246/246. The rerun adds source SHA metadata (session53617); verify equivalence.json before relying on freshness.
+Final aggregate: `stage_d_aggregate.py` (without --package first). It requires source-matched planner equivalence and current route hashes. Review every blocker and every item. On genuine full PASS only, run `stage_d_aggregate.py --package`, verify delivery SHA and STOP. Real iPad must be listed NOT RUN for user's own test.
+Do not rerun update_level2_acceptance_stage_d.py; it is not idempotent. Prior pause checkpoint preserved as CAPTAIN_SUJI_CHECKPOINT_previous_1717.txt; prior log before this rewrite preserved as CAPTAIN_SUJI_CHECKPOINT_before_latest_update.txt.
+
+
+LATEST USER STEERING (19 October): Budget is very low. Keep supervisor running. Inspect only last few log lines about every10 minutes. L4 latency PASS threshold workingP95 <= liveP95*1.10. Do not do further planner optimization. If fresh S3 Level3 worker-load fails again, fix game to terminate/recreate worker once and show ?Try again? instead of hanging; rerun ONLY S3 and S4. When every gate passes, run stage_d_aggregate.py --package, verify ZIP SHA, STOP. If budget expires first, update this checkpoint and stop.
+
+IMPORTANT ACTIVE SUPERVISOR NOTE: session27722 was launched before the 1.10 gate edit. Its in-memory code may still enforce strict working<=live and stop early. On disk, run_stage_d_remaining_v2.py and stage_d_aggregate.py now use 1.10. If session27722 stops only on the old strict p95 assertion, reuse completed current-source evidence; continue only the outstanding final matrix and aggregate under 1.10. Do not rerun completed idle/native/polish/static checks or further optimize planner.
+Fresh S3/S4 run has not started yet. Do not preemptively edit Level3; apply one-time worker recovery only if fresh S3 reproduces worker-load failure. Then rerun only S3/S4 per user instruction and report that evidence accurately.

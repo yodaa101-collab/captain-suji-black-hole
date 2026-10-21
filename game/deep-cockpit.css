@@ -1,0 +1,44 @@
+/* Level 3 only. Fixed-height dashboard with independently reserved thumb controls. */
+#level3{--deck:clamp(192px,24dvh,248px);position:fixed;inset:0;height:100dvh;width:100%;background:#020711;color:#f1f7ff;display:flex;flex-direction:column;overflow:hidden;font:16px system-ui}
+#level3,#level3 *{box-sizing:border-box}
+#level3 header{flex:0 0 64px;height:64px;padding:8px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(#1b2b3d,#0d1826);border-bottom:1px solid #647589;color:#f1dfac;font-size:16px}
+#level3 header strong{font-size:16px}
+#level3 button{font:700 16px system-ui;min-height:44px;border:1px solid #788897;border-radius:10px;background:linear-gradient(#34495e,#182b3d);color:#f8fbff;padding:8px 12px;box-shadow:inset 0 1px #ced6df44,0 3px 0 #050b13;cursor:pointer;touch-action:none}
+#level3 button:active,#level3 button.pressed{background:linear-gradient(#0c1a28,#294258);box-shadow:inset 0 3px 8px #000a;transform:translateY(2px)}
+#level3 button:focus-visible{outline:3px solid #96eaff;outline-offset:2px}
+#level3 #l3Arena{position:relative;flex:1;min-height:0;width:100%;height:auto;overflow:hidden}
+#l3Canvas,#l3Frame{position:absolute;inset:0;width:100%;height:100%}#l3Canvas{touch-action:none}#l3Frame{pointer-events:none;z-index:1}
+#level3 #l3Hud{position:absolute;left:0;right:0;bottom:0;height:var(--deck);padding:10px 118px 9px;display:grid;grid-template-columns:1fr 1fr 1.34fr 1fr 1.2fr;grid-template-rows:minmax(106px,1fr) 46px;gap:8px 12px;align-items:stretch;align-content:stretch;justify-items:stretch;transform:none;color:#f1f7ff;background:linear-gradient(#3e4c59 0,#1d2a38 5px,#111c28 12px,#0a111c 92%);border-top:3px solid #b4a878;box-shadow:0 -8px 25px #0009,inset 0 1px #fff4;z-index:2}
+#level3 #l3Hud .instrument{grid-column:auto;grid-row:1;min-width:0;width:auto;height:auto;position:relative;left:auto;right:auto;top:auto;bottom:auto;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;padding:0;border:0;border-radius:0;white-space:normal;font-size:16px;font-weight:700;line-height:1.15}
+#level3 #l3Hud .instrument{align-self:stretch}
+#l3LandingBadge{font-size:24px;color:#9cebc9;font-weight:800;margin-bottom:12px}
+#level3 #l3Gravity.danger .gravityFace:after{content:'';position:absolute;right:5px;top:5px;width:10px;height:10px;border-radius:50%;border:1px solid #ffd1ba;background:#ff594a;box-shadow:0 0 12px #ff3b29}
+#level3 .instrument>span:first-child{font-size:16px;font-weight:800;color:#e1eaf2;letter-spacing:.02em}
+#level3 .speedFace,#level3 .gravityFace{position:relative;background:radial-gradient(ellipse at 40% 25%,#243544,#080f19 72%);border:3px solid #7f8f99;box-shadow:0 2px 5px #000c,inset 0 0 5px #000;border-radius:50%}
+#level3 .speedFace{width:90px;height:90px}#level3 .tick{position:absolute;font-size:16px;color:#c9deeb}#level3 .zero{left:7px;bottom:18px}#level3 .mid{top:5px;left:28px}#level3 .end{right:0;bottom:18px}
+#l3Needle{position:absolute;left:41px;top:14px;width:3px;height:30px;background:#f6be68;transform-origin:50% 30px;box-shadow:0 0 4px #ffd99588;border-radius:2px}#l3SpeedValue{position:absolute;left:26px;right:26px;bottom:7px;font-size:16px;color:#e9f7ff;background:#0c1d2c}
+#level3 .gravityFace{width:64px;height:64px;display:grid;place-items:center}#l3GravityArrow{font-style:normal;font-size:40px;color:#8ee3ff;line-height:1}#l3GravityBody{font-size:16px;color:#bdeaff}
+#level3 .lamps{display:flex;gap:10px;padding:8px 9px;border:2px solid #73808c;border-radius:24px;background:#050b12;box-shadow:inset 0 3px 5px #000}
+#level3 .lamps i{width:22px;height:22px;border-radius:50%;background:#20262d;border:2px solid #3a424b}
+#level3 .lamps i[data-lamp=red].lit{background:radial-gradient(at 35% 25%,#fff3db,#ff5b57 45%,#bd162b);box-shadow:0 0 14px #ff4242aa}
+#level3 .lamps i[data-lamp=amber].lit{background:radial-gradient(at 35% 25%,#fffadc,#ffc957 45%,#bd7416);box-shadow:0 0 14px #ffc542aa}
+#level3 .lamps i[data-lamp=green].lit{background:radial-gradient(at 35% 25%,#f0fff2,#6ff59b 45%,#168544);box-shadow:0 0 14px #42ff83aa}
+#level3 #l3Bulb{margin:0}#level3 #l3Label{font-size:16px;font-weight:700;color:#eff9ff;line-height:1.15;max-width:190px;margin:0}
+#level3 #l3Map{position:static;width:90px;height:90px;display:block;border:5px solid #748794;border-radius:50%;background:#06101b;box-shadow:0 3px 7px #000;object-fit:fill}
+#l3DistanceValue{display:block;font:700 25px ui-monospace,monospace;color:#98f0d1;background:#06150f;border:2px inset #53675e;padding:10px 5px;min-width:105px;letter-spacing:.03em}#l3TargetName{font-size:16px;line-height:1.15;color:#c1d5e8}
+#l3Utilities{grid-column:1/-1;grid-row:2;display:flex;align-items:stretch;justify-content:center;gap:10px;min-width:0}
+#level3 #l3Utilities button{position:relative;grid-column:auto;grid-row:auto;left:auto;right:auto;top:auto;bottom:auto;white-space:nowrap;padding:7px 10px;justify-self:auto;font-size:16px}
+#level3 #l3Utilities #l3Nav{padding-left:32px;min-width:126px;text-align:right}
+#l3Nav:before{content:'';position:absolute;left:10px;top:12px;width:12px;height:19px;background:linear-gradient(90deg,#9aabae,#edf8fa,#63757b);border:1px solid #080e14;border-radius:4px;transform:rotate(-15deg);box-shadow:1px 2px 2px #000}#l3Nav[aria-pressed=true]:before{transform:rotate(15deg);background:linear-gradient(90deg,#50a778,#dcffe7,#2c8551)}
+#level3 #l3Count{position:static;font-size:16px;font-weight:700;white-space:nowrap;display:flex;align-items:center;padding:0 3px;color:#d4e5ed}
+#level3 #l3Controls{position:absolute;left:12px;right:12px;bottom:26px;display:flex;justify-content:space-between;pointer-events:none;z-index:3}
+#level3 #l3Controls button{pointer-events:auto;flex:0 0 96px;width:96px;height:100px;border:3px solid #a2aeb6;border-radius:20px;font-size:36px;background:linear-gradient(145deg,#536576,#263b50 40%,#122132);box-shadow:inset 0 2px #fff5,0 5px 0 #030911,0 9px 12px #0009}
+#level3 #l3Controls button:active,#level3 #l3Controls button.pressed{background:linear-gradient(145deg,#172a3b,#1f3b51);box-shadow:inset 0 4px 12px #000a;transform:translateY(3px)}
+#level3 #l3Message{position:absolute;top:12px;left:20%;right:20%;z-index:2;text-align:center;color:#e2f7ff;font-size:16px;font-weight:800;text-shadow:0 2px 4px #000;pointer-events:none}
+#level3 #l3Lesson{position:absolute;top:23%;left:22%;right:22%;padding:24px;border:2px solid #d8d39e;border-radius:18px;background:#0d1c2aee;font-size:20px;text-align:center;box-shadow:0 0 0 200vmax #0008;z-index:6}
+#level3 #l3Traffic.orbitSpotlight{z-index:7;box-shadow:0 0 28px #ffe7aa;border-radius:14px}
+#level3 #l3Result,#level3 #l3Card{position:absolute;left:22%;right:22%;top:10%;padding:22px;border:2px solid #a9b8c0;border-radius:18px;background:#0d1b2bf5;text-align:center;z-index:8;box-shadow:0 10px 35px #0009;font-size:18px}
+#level3 #l3Result h2,#level3 #l3Card h2{font-size:24px;margin:0 0 14px;color:#f6e4ae}#level3 #l3Result p,#level3 #l3Card p{font-size:18px}#level3 #l3Result p:empty{display:none}#level3 #l3Card{max-height:65%;overflow:auto}
+#l3Preparing{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;gap:20px;align-items:center;justify-content:center;background:radial-gradient(at 50% 45%,#152b43,#030914 70%);color:#e2effb;font-size:24px;font-weight:700}#l3PrepareProgress{font-size:18px;color:#b3d3eb}
+#level3 .hidden{display:none!important}
+@media(max-width:900px){#level3{--deck:248px}#level3 header{padding:8px 12px}#level3 header strong{max-width:220px}#level3 #l3Hud{padding:12px 112px;gap:10px 6px;grid-template-rows:140px 56px;align-content:center;grid-template-columns:1fr 1fr 1.25fr 1fr 1.12fr}#level3 .speedFace{width:82px;height:82px}#level3 .mid{left:22px}#l3Needle{left:37px;top:12px;transform-origin:50% 27px;height:27px}#l3SpeedValue{left:23px;right:23px;bottom:5px}#level3 #l3Map{width:80px;height:80px}#l3DistanceValue{font-size:21px;min-width:92px}#l3Utilities{gap:6px;flex-wrap:wrap}#level3 #l3Utilities button{padding:7px 8px}#level3 #l3Utilities #l3Nav{min-width:124px}#level3 #l3Count{padding:0 2px}#level3 #l3Controls{bottom:75px}#level3 #l3Result,#level3 #l3Card{left:17%;right:17%}}

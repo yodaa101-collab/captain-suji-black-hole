@@ -729,3 +729,57 @@ Budget is very low. Keep the supervisor running, but:
 4. When every gate passes, run stage_d_aggregate.py --package, verify the zip SHA, and STOP.
    If the budget runs out first, update the checkpoint and stop.
 ```
+
+## V7c.1 small fixes – sent after Claude's final audit of zip 102be8d0 (2026-10-21, user chose "fix first")
+
+```
+V7c.1 – small fixes after Claude's final audit of Captain_Suji_V7c.zip (SHA 102be8d0…).
+Change ONLY game/level3.js and game/deep-cockpit.css. Do not touch physics, planner,
+workers (nav_worker.js, nav_worker3.js) or any Level 1/2 file.
+
+1. Worker double failure: if the Level 3 worker fails twice, dispatch() calls
+   worker.postMessage on null → one uncaught "TypeError: Cannot read properties of null
+   (reading 'postMessage')". Guard queue()/dispatch(): with no worker, do nothing and keep
+   busy=false. The ship must keep flying and "ORBIT had a problem. Try again." must show.
+   Prove it: serve nav_worker3.js as HTTP 503, start Level 3, launch → 0 console errors,
+   flight continues.
+2. Level 3 steering buttons (#l3Left, #l3Right) are 92x100 CSS px. Make them at least
+   96x100 at 1024x768, 1194x834 and 1366x1024, with no overlap with other controls.
+   Report measured sizes.
+3. Clear the flight hint ("Pass BETWEEN BH-1 and BH-2" / "Gap cleared…") when the
+   landing/result card shows.
+4. Use one name for the first planet: the button says "Launch from Planet 1" but the card
+   says "blue planet". Change the button to "Launch from the blue planet".
+
+Rerun on the new files only: stress S1–S4 for Level 3 at 1180x820 and 820x1180, the
+10-minute idle (both orientations), and the plain static-server test of the DEPLOY list.
+Report PASS/FAIL per test, the new level3.js and deep-cockpit.css SHA256, and confirm all
+other game files are byte-identical to the 102be8d0 zip. Then package
+Captain_Suji_V7c.zip, verify its SHA256 and STOP. Do not deploy.
+```
+
+## Release V7c.1 to live (2026-10-21, user chose release before iPad test) – file: codex-work/RELEASE_V7c1_PROMPT.txt
+
+```
+RELEASE V7c.1 to the live site. Vikas has approved releasing now, before the iPad test.
+
+Source: C:\Users\vikaa\codex-work\Captain_Suji_V7c.zip - verify SHA256 is
+c49a28e3f729ab4cfbc8977775467c0e4c3a7d4ac7e67607e6da537a1c732d59 first. If not, STOP.
+Repo: C:\Users\vikaa\repos\captain-suji-black-hole (remote yodaa101-collab/captain-suji-black-hole).
+Branch: v7b-development ONLY (GitHub Pages serves it). Never touch or push branch main.
+
+1. git checkout v7b-development; git pull --ff-only. Working tree must be clean.
+2. Copy exactly the files listed in DEPLOY.txt from the zip into the repo (.nojekyll,
+   index.html, game/*). Do not copy tests/, evidence/ or reports. Do not delete or edit
+   docs/, CLAUDE.md, README.md or anything else.
+3. LINE ENDINGS: this PC has core.autocrlf=true, which rewrites CRLF files and changes 8
+   game files (e.g. level3.js, level3_engine.js, cockpit.js). Add them with
+   `git -c core.autocrlf=false add ...` (or set it false for this repo only). Then prove,
+   for EVERY DEPLOY file, that SHA256 of `git show :<path>` equals SHA256 of the zip file.
+   Any mismatch -> STOP.
+4. Commit: "Release V7c.1: Level 3 Deep Space Mission (zip c49a28e3)". Show me
+   `git show --stat HEAD`, then push origin v7b-development.
+5. After GitHub Pages updates (wait up to 10 minutes), download every DEPLOY file from
+   https://yodaa101-collab.github.io/captain-suji-black-hole/ and compare SHA256 with the
+   zip. Report the commit hash and a PASS/FAIL per file. STOP.
+```

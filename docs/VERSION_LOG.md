@@ -9,8 +9,38 @@ repo's git history, `README.md` and `test-results.txt`.
 
 ---
 
-## V7c Stage (d) – polish, Level 2 proof, "Suji-proof" stress, final package
-**Date:** 2026-10-19 · **Status:** IN PROGRESS (not packaged, not deployed)
+## V7c.1 – Level 3 Deep Space Mission (LIVE)
+**Date:** 2026-10-21 · **Status:** LIVE on v7b-development (commit 15b1383, zip SHA c49a28e3…).
+Released before a real-iPad test, by Vikas's decision.
+- **Changes vs Stage (d) zip 102be8d0:** only `level3.js` and `deep-cockpit.css`. If the ORBIT
+  worker fails twice, the game no longer throws an error. Level 3 steering buttons go from 92 to 96 px. The flight hint
+  is cleared on the result card. The button now says "Launch from the blue planet".
+- **Measured by Claude (own Chrome/CDP harness, plain server):**
+  - Frame p95 16.8 ms in every phase of L1/L2/L3 at 1× and 4× CPU (DPR 2, 1366×1024).
+    Only the "Preparing deep space…" loading screen stalls (p95 117 ms at 1×, 583 ms at 4×).
+  - 1366×1024, 1194×834, 1024×768: 0 overlaps, 0 off-screen. L3 steering 96×100,
+    L2 96×96 / 112×112. 0 console errors, 0 missing files.
+  - Worker served as HTTP 503 twice: 0 console errors, flight continues, "ORBIT had a problem. Try again."
+  - Real L3 missions flown in the browser: every leg landed (6/6 across 102be8d0 and V7c.1),
+    touchdown gap 0–2.2 px, max frame-to-frame jump 0.11% of width.
+  - Wild starts (80° off + 0–4 s random steering, 480 flights, on 102be8d0, same physics):
+    ORBIT route shown 95.6%; child-like follower lands 96.7%.
+  - 10-minute idle on L3: p95 16.8 ms, heap flat at 1.71–1.74 MB, no errors.
+  - After deploy: all 25 live files on GitHub Pages byte-identical to the zip (13:32 IST).
+    tinyurl.com/CaptainSuji → …github.io/captain-suji-black-hole/game/ (200). One full L3
+    mission flown on the live site: both legs landed, gap 0, 0 errors.
+- **Codex:** S1–S4 L3 both orientations PASS; 10-min idle both orientations PASS.
+- **Open issues:** real iPad not tested yet. The root `index.html` makes the browser
+  request `/favicon.ico`, which gives a 404 (same as V7b.5, harmless). `SHA256SUMS.txt` inside the zip lists the old
+  hashes for the 2 changed files (the file is not deployed).
+
+## V7c Stage (d) final – polish, Level 2 proof, "Suji-proof" stress, final package
+**Date:** 2026-10-19 (zip 20:32, SHA 102be8d0…) · **Verdict:** PASS with 2 small defects, fixed in V7c.1.
+Codex fixed S3 at 20:15 (`level3.js`: worker error handling + one retry + "Try again"), reran
+S3/S4, aggregate PASS. Claude's audit (2026-10-21): every non-negotiable passed except L3 steering
+92 px (<96) and 1 console error when the worker fails twice.
+
+### Stage (d) progress notes (2026-10-19, before the final zip)
 - **Changes:** P1–P5 polish; Level 2 changes kept by user decision and proved (L1–L4); new
   `input-guard.js/.css` (blocks long-press menu, text selection, pinch-zoom); one-line planner
   change in `nav_worker.js` (skips routes that need more steering than the best one found).
@@ -76,8 +106,8 @@ repo's git history, `README.md` and `test-results.txt`.
   learning_pilot 130/200 (already failing in V7c). Visuals still cartoon; 2nd hole beyond the
   blue planet.
 
-## V7b.5 – richer ORBIT routes (LIVE)
-**Date:** 2026-10-17 · **Status:** live on v7b-development (tinyurl.com/CaptainSuji)
+## V7b.5 – richer ORBIT routes
+**Date:** 2026-10-17 · **Status:** was live on v7b-development until 2026-10-21 (commit 504a24a); replaced by V7c.1
 - **Changes:** 25-second segmented ORBIT worker search, 1500-unit soft world boundary,
   45-second flight limit, off-path recovery advice, map auto-framing, explicit left/right ORBIT
   arrows, forced fresh cockpit assets.

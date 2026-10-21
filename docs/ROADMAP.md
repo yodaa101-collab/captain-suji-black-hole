@@ -2,17 +2,21 @@
 
 Update this file after every version (see CLAUDE.md).
 
-## Now – finish V7c (from STATUS-handoff.md, 2026-10-19)
-1. Wait for the background script (`run_stage_d_remaining_v2.py`) to finish, then Claude checks
-   the route and stress results (especially S3).
-2. After 20:59, send Codex ONE short prompt: either "run stage_d_aggregate.py --package, verify
-   the zip SHA, STOP", or one specific fix if a stress test failed.
-3. Claude does the final audit of the new zip.
-4. The user tests on a real iPad (suggested tomorrow, fresh).
-5. After that, copy the zip to Downloads and upload to GitHub Pages.
+## Now – after the V7c.1 release (2026-10-21)
+V7c.1 is live (commit 15b1383). Done: Stage (d) audit, V7c.1 fixes, release.
+1. Vikas plays the LIVE game on the real iPad (with Suji): Level 3 fairness and both planets,
+   ◀ ▶ easy to hit, Levels 1/2 feel unchanged, "Preparing deep space…" wait acceptable,
+   rotate during flight. Write down anything odd.
+2. If the iPad shows a problem: roll back with `git revert 15b1383` on v7b-development (V7b.5
+   returns), then fix through Codex.
+3. Small tidy-up for the next round (V7c.2, not urgent):
+   - add `<link rel="icon" href="data:,">` to root `index.html` (stops the /favicon.ico 404);
+   - regenerate `SHA256SUMS.txt` in the packaged zip after any file change.
+4. Copy the released zip to `Downloads\Suji Captain\` as the new release copy (Vikas's OK first).
 
-Open risk: S3 (Level 3 portrait re-entry, worker failed to load `level3_engine.js`). If it fails
-again, the game needs a worker-error retry plus a "Try again" message.
+## Done – finish V7c (from STATUS-handoff.md, 2026-10-19)
+All five steps done 2026-10-19 → 2026-10-21. The S3 risk was fixed in Stage (d) and V7c.1.
+The real-iPad test was moved to after the release, by Vikas's decision.
 
 ## Next – Level 4
 

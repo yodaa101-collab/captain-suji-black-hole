@@ -1,6 +1,10 @@
 # Suji Game – audit log
 
-## ▶ WHERE WE ARE (2026-10-19, evening)
+## ▶ WHERE WE ARE (2026-10-21, 13:30)
+- V7c.1 zip (codex-work 21 Oct 13:08, SHA c49a28e3…) → **READY FOR IPAD TEST** (Claude, measured). Next: Vikas tests on the real iPad → if approved, deploy to v7b-development + update docs/VERSION_LOG.md and docs/ROADMAP.md in the repo.
+- Details: 2026-10-21 entries at the bottom (Stage (d) final 102be8d0, then V7c.1).
+
+## Earlier status (2026-10-19, evening)
 - Stage (c) (codex-work zip 15:50, SHA cde3e18f…) → **ACCEPTED**. The full Stage (d) prompt (polish P1–P5 + Level 2 L1–L4 + Suji-proof S1–S10 + final evidence/deploy list) is at the bottom of `prompts-V7d.md`.
 - User decisions: quality over speed; KEEP OpenAI's Level 2 changes (Level 2 must be proven in d).
 - Downloads zip = accepted Stage (a) (39c79ffb…). Original V7c is in Old versions. Copy the final zip only with the user's OK.
@@ -111,3 +115,33 @@ Problems:
 - input-guard.js: blocks contextmenu, selectstart, Safari gesture* events and multi-touch touchmove. No game controls touched. OK (S7).
 - Reason for the change: isolated latency run gave working p95 182.0 vs live 176.8 ms. That's within noise. I relaxed the gate to ≤ live +10% to avoid budget burn.
 - OPEN: first stress matrix failed S3 Level 3 portrait (re-entered worker failed to load level3_engine.js). The fix so far is test-side only (server backlog 128). If it recurs, the game needs a worker-error retry.
+
+## 2026-10-19 (19:54) – mid-run check
+- Level 2 routes (pruned planner) 492/492 landed. Stress matrix: S3 Level 3 FAILED again in both orientations (finalHealth: "importScripts … level3_engine.js / level3_planner.js failed to load" from a terminated nav_worker3, aliveAtError=false). Game itself recovered. Fix prompt drafted (worker onerror + one retry + "Try again"). Codex applied it at 20:15 (level3.js only), reran S3/S4, aggregate PASS, packaged 20:32.
+
+## 2026-10-21 – Stage (d) FINAL zip (codex-work 19 Oct 20:32, SHA 102be8d0…, 77.4 MB) – Verdict: PASS with 2 small defects → V7c.1 fix round (user chose "fix first")
+Claude's own measurements (own Node/CDP harness, plain static server, Chrome headless, no game code injected):
+- Files: zip game/ = codex-work game/. level3_engine/planner/nav_worker3 + engine/level2_engine/gesture/game.js byte-identical to accepted Stage (a) zip (39c79ffb) and live 7bGitUpload. SHA256SUMS 23/23 OK (CRLF). .nojekyll present.
+- S3 fix diff (level3.js): stale/terminated workers' errors are preventDefault-ed; current worker recreated once; message "ORBIT had a problem. Try again.". Reviewed: correct for the S3 case.
+- My worker test (nav_worker3.js served as 503): NO freeze, ship keeps flying, message shown, but 1 uncaught "TypeError: Cannot read properties of null (reading 'postMessage')" (dispatch() after the retry is used up). Minor → V7c.1 #1.
+- Frame-interval p95 (DPR 2, 1366x1024), every phase of L1/L2/L3 incl. L1 fall, L2 escape-pod fall, L2/L3 landing, results: 1x CPU 16.8 ms; 4x CPU 16.8 ms. Only the "Preparing deep space…" loading screen stalls (p95 117 ms at 1x, 483 ms / max 1.9 s at 4x). 0 console errors, 0 HTTP errors. Desktop GPU, not an iPad.
+- Layout at 1366x1024 / 1194x834 / 1024x768 (title, L1 aim, L2 planning+cockpit, L3 aim+flight+result): 0 DOM overlaps, 0 off-screen. L2 steering 96x96 (1024) / 112x112. L3 steering 92x100 → 4 px under the 96 rule → V7c.1 #2. Minor: flight hint stays above the result card; "Launch from Planet 1" vs "blue planet" → V7c.1 #3/#4.
+- Real L3 flights in browser (keyboard arrows following ORBIT plan): 4/4 legs landed (2 full missions, layouts 3 and 9, +1 extra layout 10), game touchdown gap 0–2.2 px, max frame-to-frame jump 0.05–0.11% of width, 0 errors. Touchdown frame looks right (ship on surface with dust).
+- 10-min idle on L3 (1180x820): p95 16.8 ms every minute; heap 1.16 → 1.71 MB by minute 6, then flat 1.71–1.74 MB (frame log cap); no errors; no extra worker loads.
+- Wild-start fairness L3 (game's own engine+planner, 12 layouts x 2 legs x 20, seed 2026; launch up to 80° off + 0–4 s random steering): 6/480 died during the random phase; ORBIT route shown 453/474 = 95.6% (target ≥90–95%); exact follow lands 452/453; child-like follower (±15% timing, 0.2 s delay, re-plan every 1 s) lands 438/453 = 96.7% (target ≥95%). Planner time p50 135 ms, p95 231 ms (Node). No-route cases spread over 9 layouts (L11 worst: 5/40).
+- Not re-run (unchanged code, earlier evidence stands): L3 no-steer rates (Stage a, 6.3–10.0%), L2 fairness (V7b.5 490/492; engine identical, planner equivalence 246/246, routes 492/492).
+- Note: Codex's 10-min idle and static-server rows ran on the pre-fix level3.js (def29ec6); my idle rerun on the final file passed; V7c.1 reruns both.
+- Real iPad: NOT RUN.
+
+## 2026-10-21 (13:30) – V7c.1 zip (codex-work 21 Oct 13:08, SHA c49a28e3…, 84.4 MB) – Verdict: READY FOR IPAD TEST
+- Only game/level3.js (41533651…) and game/deep-cockpit.css (80c21327…) changed vs 102be8d0; the other 21 game files + index.html + .nojekyll + DEPLOY.txt byte-identical. Diff = exactly the 4 fixes: `if(!worker){busy=false;return;}` in dispatch() and queue(); l3Message cleared in finish(); button "Launch from the blue planet"; steering 92→96 px.
+- Packaging slip (not deployed, harmless): SHA256SUMS.txt inside the zip still lists the OLD hashes for those 2 files.
+- My measurements: worker 503 twice → 0 console errors, flight continues, "ORBIT had a problem. Try again." shown. Layout 1366x1024 / 1194x834 / 1024x768: 0 overlaps, 0 off-screen, L3 steering 96x100, L2 96x96 / 112x112. Real L3 mission in browser (layout 4, both legs): landed, gap 0, jump 0.11%, hint empty on result card, button text correct, 0 errors. Frame p95 every phase L1/L2/L3: 16.8 ms at 1x and 4x CPU (loading screen only: 117 / 583 ms). 0 HTTP errors.
+- Codex report: S1–S4 L3 both orientations PASS, 10-min idle both orientations PASS; static-server "FAIL" is only the browser's automatic /favicon.ico request from the root redirect page. Same in live V7b.5 (root index.html identical to live). Harmless; roadmap item: add `<link rel="icon" href="data:,">` to root index.html.
+- Unchanged since 102be8d0 audit (still valid): frozen physics, wild-start fairness 95.6% route / 96.7% follow-lands, L2 routes 492/492.
+- Real iPad: NOT RUN (Vikas).
+
+## 2026-10-21 (13:35) – V7c.1 RELEASED to live
+- Codex made the release commit offline (its sandbox has no network): 15b1383 on v7b-development, parent a875009. Claude verified all 25 DEPLOY files in the commit are byte-identical to zip c49a28e3 (line endings preserved with core.autocrlf=false), and only game/ files changed. Claude pushed. main untouched (c9aeacd).
+- Live check: all 25 files from yodaa101-collab.github.io/captain-suji-black-hole match the zip (13:32). tinyurl.com/CaptainSuji → …/game/ 200. Full L3 mission flown on the live site (layout 6): both legs landed, gap 0, 0 errors.
+- Released BEFORE a real-iPad test (Vikas's decision). Rollback if needed: `git revert 15b1383` on v7b-development.

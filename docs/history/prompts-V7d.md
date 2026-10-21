@@ -827,3 +827,43 @@ Report the level3.js SHA256 and confirm all other files are byte-identical to zi
 Package Captain_Suji_V7c.zip, verify the SHA256 and STOP. Do NOT push or deploy (Claude will
 verify and push).
 ```
+
+## V7c.2b – uniform scale for the Level 3 start view (2026-10-21) – file: codex-work/FIX_V7c2b_PROMPT.txt
+
+```
+V7c.2b - fix the STRETCHED Level 3 start view (zip a3322c1f). Keep everything else from V7c.2.
+
+PROBLEM (measured by Claude, all 12 layouts x 2 legs, using SujiLevel3Debug.aimView):
+aimScale() now uses different scales across and down (sx != sy). This stretches the map, so on-screen
+directions are wrong. Stretch max(sx/sy, sy/sx): landscape median 2.1-2.4x, worst 4.0-4.6x;
+portrait median 1.4x, worst 1.9x. Angle between the on-screen direction from ship to target planet
+and the REAL (physics) direction: 1024x768 median 13 deg / worst 36 deg (13 of 24 scenes >10 deg);
+1180x820 14 / 37 deg; 1194x834 14 / 37 deg; 1366x1024 12 / 33 deg; 820x1180 5 / 11 deg; 1024x1366 5 / 11 deg.
+So if Suji aims the pull line straight at the planet, the ship can fly up to 37 deg off. The radar
+(true shape) and the big view disagree. The launch-equivalence test only compared drag to velocity,
+not picture to world.
+
+FIX - change ONLY game/level3.js:
+1. Use ONE uniform scale: s = min(sx, sy). Centre the bounding box in the free area (both axes).
+   Keep the fixed on-screen sprite sizes from V7c.2 (planet 84 px, hole 100 px, ship 48 px), the
+   target halo, pulsing ring and labels. Draw, pull line, runway and drag input all use the same
+   uniform transform.
+2. Fixed-size sprites must not overlap each other at the smaller uniform scale: if two bodies (or
+   a body and the ship) are closer on screen than (sizeA+sizeB)/2 + 8 px, shrink the margin
+   (down to 150 world units) before shrinking the sprites; never draw a planet below 64 px or a hole below 56 px.
+3. Leg 2: the ship sits on the blue planet's limb, in the true direction.
+
+ACCEPTANCE - at 1024x768, 1180x820, 1194x834, 1366x1024, 820x1180 and 1024x1366, all 12 layouts, legs 1 and 2:
+- sx == sy exactly (report the max ratio, must be 1.000);
+- on-screen vs real direction from ship to target planet, and to each black hole: <= 1 deg
+  (report the worst case);
+- planet globe >= 64 px and hole >= 56 px measured from PIXELS; no body/body, body/ship or label overlaps;
+  target halo and label visible;
+- a real drag aimed on screen straight at the blue planet (leg 1) launches within 1 deg of the real
+  direction to that planet (show 6 examples, both orientations);
+- 0 console errors; frame p95 <= 17.5 ms at 1x and <= 25 ms at 4x on the start screen;
+- rerun stress S1-S4 for Level 3 (both orientations) and the plain static-server test.
+Before/after screenshots at every viewport in evidence/v7c.2b/. Report the level3.js SHA256 and confirm
+all other files are byte-identical to zip a3322c1f. Regenerate SHA256SUMS.txt. Package
+Captain_Suji_V7c.zip, verify the SHA256 and STOP. Do NOT push or deploy.
+```

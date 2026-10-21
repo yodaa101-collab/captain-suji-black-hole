@@ -2,15 +2,11 @@
 
 Update this file after every version (see CLAUDE.md).
 
-## Now – V7c.2: Level 3 start-screen visibility (2026-10-21)
-V7b.5 is live again (rollback 80140eb). V7c.1 was released, then rolled back after the iPad test.
-1. Codex: codex-work/FIX_V7c2_PROMPT.txt. Zoom the start view to the bodies; planets ≥64 px,
-   holes ≥56 px; target halo plus "BLUE PLANET - land here!"; level3.js only.
-2. Claude audits the new zip, including a NEW standing check: on-screen pixel size of planets,
-   holes and the target cue on every screen, at all 6 iPad viewports.
-3. Vikas tests on the real iPad BEFORE release this time (e.g. Home Wi-Fi server or a test folder).
-4. Release: Claude verifies and pushes; then updates this file and VERSION_LOG.md.
-5. Small tidy-up items, can go into V7c.2:
+## Now – V7c.2b is live (2026-10-21, commit c824ea8)
+1. Vikas looks at the LIVE game on the real iPad: the Level 3 start screen (planets, labels), the
+   "Preparing deep space…" wait, ◀ ▶ feel, Levels 1/2 unchanged. Rollback if needed: `git revert c824ea8`.
+2. Ideas from the iPad look go into V7c.3 (for example bigger labels for the holes and the other planet if they are hard to read).
+3. Small tidy-up items, can go into V7c.3:
    - add `<link rel="icon" href="data:,">` to root `index.html` (stops the /favicon.ico 404);
    - regenerate `SHA256SUMS.txt` in the packaged zip after any file change.
 4. Copy the released zip to `Downloads\Suji Captain\` as the new release copy (Vikas's OK first).

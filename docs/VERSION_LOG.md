@@ -9,7 +9,26 @@ repo's git history, `README.md` and `test-results.txt`.
 
 ---
 
-## ROLLBACK – V7b.5 live again
+## V7c.2b – Level 3 with a clear start screen (LIVE)
+**Date:** 2026-10-21 · **Status:** LIVE on v7b-development (commit c824ea8, zip SHA b7f72b39…).
+Released before a real-iPad look, by Vikas's decision.
+- **Changes vs V7c.1:** only `level3.js`. The start (aim) view zooms to the bodies with ONE uniform scale.
+  Fixed sprite sizes: planet 84 px (globe ~74), hole 100 px, ship 48 px. The target planet gets a glow,
+  a pulsing ring and a label "BLUE/GREEN PLANET - land here!". The other planet and the holes get small labels. On leg 2
+  only the departure blue-planet sprite may move (≤50 px) so the ship sits on its edge.
+- **Measured by Claude (144 scenes = 12 layouts × 2 legs × 6 viewports):** stretch 1.0000. Direction
+  error on screen vs real (ship→target, ship→holes) 0.00°. Planet globe ≥65 px (1024×768), 73–74 px
+  elsewhere; hole ≥88 px. Smallest gap between objects 28.7 px. Leg-2 offset ≤49.5 px. Real drags aimed at
+  the drawn target: leg 1 within 0.04°, leg 2 within 1.92°. Frame p95 16.8 ms in all phases at 1× and 4×. After deploy: 25/25 live files match the zip; a full L3 mission flown on the live site landed both legs.
+  Real missions in the browser: 4/4 legs landed, gap 0. Worker failing twice: 0 errors. 0 overlaps, steering 96×100.
+- **Open:** no real-iPad check yet (Safari, real touch, loading time, readability of the 12 px labels).
+
+## V7c.2 – first start-screen fix (NOT RELEASED)
+**Date:** 2026-10-21 (zip a3322c1f) · **Verdict:** NOT READY. Planets became big and labelled, but the view
+used different horizontal and vertical scales: stretch up to 4.6×, and the direction to the target on screen
+was up to 37° off the real one (landscape median 12–14°). Fixed in V7c.2b.
+
+## ROLLBACK – V7b.5 live again (until V7c.2b)
 **Date:** 2026-10-21 · commit 80140eb reverts 15b1383. Game files are identical to the
 pre-release live commit 504a24a. Reason: Vikas's iPad test of V7c.1 found the Level 3 start-screen
 planets too small to see (16–23 px in landscape). The fix is V7c.2 (codex-work/FIX_V7c2_PROMPT.txt).
@@ -117,7 +136,7 @@ S3/S4, aggregate PASS. Claude's audit (2026-10-21): every non-negotiable passed 
   blue planet.
 
 ## V7b.5 – richer ORBIT routes
-**Date:** 2026-10-17 · **Status:** LIVE on v7b-development (commit 504a24a; replaced by V7c.1 for about 15 minutes on 2026-10-21, then restored by revert 80140eb)
+**Date:** 2026-10-17 · **Status:** was live on v7b-development (commit 504a24a); replaced by V7c.2b on 2026-10-21 (and briefly by V7c.1 earlier that day)
 - **Changes:** 25-second segmented ORBIT worker search, 1500-unit soft world boundary,
   45-second flight limit, off-path recovery advice, map auto-framing, explicit left/right ORBIT
   arrows, forced fresh cockpit assets.

@@ -155,3 +155,22 @@ Claude's own measurements (own Node/CDP harness, plain static server, Chrome hea
 ## 2026-10-21 – ROLLBACK to V7b.5 (Vikas's decision)
 - `git revert 15b1383` → commit 80140eb on v7b-development, pushed by Claude. Game files are identical to the pre-release live commit 504a24a (checked with git diff). main untouched (c9aeacd). The docs were not touched by the revert.
 - Next: V7c.2 (codex-work/FIX_V7c2_PROMPT.txt) → Claude audit incl. the new pixel-size check → iPad test BEFORE release.
+
+## 2026-10-21 – V7c.2 zip (SHA a3322c1f) – Verdict: NOT READY (start view stretched → wrong aim directions)
+- Only game/level3.js changed (d63c1fe5). Zooms the start view to the bodies; fixed sprite sizes (planet 84 px, globe ~74 px; hole 100 px), target halo + pulsing ring, labels "BLUE PLANET - land here!", "GREEN PLANET - next", "BLACK HOLE". Looks much clearer (screenshot 1180x820 layout 1).
+- PROBLEM (Claude, aimView in browser, 12 layouts x 2 legs x 6 viewports): non-uniform scale sx != sy. Stretch landscape median 2.1–2.4x, worst 4.0–4.6x; portrait median 1.4x, worst 1.9x. On-screen vs real direction ship→target: median 12–14° / worst 33–37° in landscape (12–13 of 24 scenes >10°); portrait 5° / 11°. Radar (true shape) disagrees with the big view. Codex's launch-equivalence only compared drag→velocity, not picture→world.
+- Codex report otherwise: sizes OK, 0 overlaps, p95 ≤19.2 ms at 4x, S1–S4 PASS. 0 console errors in my run.
+- Fix prompt: codex-work/FIX_V7c2b_PROMPT.txt (uniform scale s=min(sx,sy), keep sprite sizes/labels, direction error ≤1°).
+
+## 2026-10-21 – V7c.2b zip (SHA b7f72b39) – Verdict: READY FOR IPAD TEST
+- Only game/level3.js changed (6dc6248b) vs a3322c1f; SHA256SUMS.txt regenerated, 0 mismatches. Leg-2 conflict resolved as option 1 (Vikas): only the departure blue-planet sprite may move, at most 50 px, along the true bearing.
+- My measurements (aimView, 12 layouts x 2 legs x 6 viewports = 144 scenes): stretch sx/sy = 1.0000 everywhere; on-screen vs real direction ship→target and ship→each hole: 0.00° max; planet globe min 65 px (1024x768), 73–74 px elsewhere; hole sprite min 88 px; min gap between bodies/ship 28.7 px (1024x768) up to 100 px; leg-2 blue offset max 49.5 / 46.6 / 46.0 / 38.9 / 37.6 / 29.7 px; ≥4 labels per scene; 0 off-screen.
+- Real mouse drags aimed at the DRAWN target (3 viewports x 5 scenes): leg 1 launch vs real direction 0.00–0.04°; leg 2 0.97–1.92° (ship is placed on the limb at launch).
+- Regression: worker 503 x2 → 0 errors, message shows after the 5 s lesson; 2 real missions (layouts 5, 1) 4/4 legs landed, gap 0, jump 0.11%; DOM layout 3 sizes 0 overlaps, steering 96x100; frame p95 16.8 ms every phase at 1x and 4x (loading screen 117 / 617 ms); 0 console/HTTP errors.
+- Screenshots: leg 1 1180x820 (V7c.2) and leg 2 1024x768 (V7c.2b) look clear; big view matches the radar.
+- Real iPad: NOT RUN — Vikas to test BEFORE release this time.
+
+## 2026-10-21 (16:13) – V7c.2b RELEASED to live (Vikas: "Live game now", without an iPad look first)
+- Claude copied the 25 DEPLOY files from zip b7f72b39 (core.autocrlf=false, all 25 blobs byte-identical), committed c824ea8 and pushed to v7b-development. main untouched (c9aeacd).
+- Live: all 25 files match the zip (16:13). tinyurl.com/CaptainSuji → …/game/ 200. Full L3 mission flown on the live site (layout 11): both legs landed, gap 0, 0 errors.
+- Rollback if needed: `git revert c824ea8`.

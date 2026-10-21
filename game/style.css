@@ -66,20 +66,3 @@
 #cockpitLevel2:not(.hidden)~#discoveryToast{position:fixed;top:auto;bottom:5%;left:50%;transform:translateX(-50%);max-width:340px;text-align:center;z-index:25;font-size:16px;padding:8px 14px}
 #cockpitResult{top:5%;max-width:420px;z-index:6}
 @media(max-width:1050px){#navPanel{width:360px;top:6px}#navAlignment{min-width:350px}#cockpitHelp{top:65px}#cockpitHud{width:min(560px,54vw)}}
-
-/* V7b.6 cockpit: navigation is visual, not a text HUD. */
-#cockpitLevel2 #navPanel,#cockpitLevel2 #cockpitMeter,#cockpitLevel2 #cockpitCompass,#cockpitLevel2 #cockpitWarning{display:none!important}
-#orbitTraffic{display:flex;flex-direction:column;align-items:center;gap:5px;max-width:240px;text-align:center;font-size:11px;font-weight:800;color:#f9f4d7}
-#orbitBulb{width:68px;height:68px;border-radius:50%;background:#6b7484;border:4px solid #d8b46a;box-shadow:inset 0 4px 12px #101722,0 0 12px #536073}
-#orbitBulb.green{background:#20e75e;box-shadow:0 0 24px #30f27caa}#orbitBulb.amber{background:#ffbd31;box-shadow:0 0 20px #ffbf35aa}#orbitBulb.red{background:#ff3f47;box-shadow:0 0 25px #ff3f47bb}
-#cockpitLevel2 #cockpitHud{width:min(540px,52vw);height:135px;pointer-events:auto;background:#121720ee;border-color:#cba64d}
-#orbitAsk{position:absolute;right:8px;bottom:6px;font-size:10px;padding:4px 6px;background:#27364a;color:#fff;border:1px solid #cba64d;border-radius:6px}
-#orbitLesson{position:absolute;z-index:9;top:35%;left:50%;transform:translateX(-50%);max-width:360px;padding:22px;border:3px solid #63e998;border-radius:18px;background:#0c1e2cee;color:#fff;text-align:center;font-size:22px;font-weight:bold;box-shadow:0 0 0 200vmax #0008;pointer-events:none}
-#orbitTraffic.orbitSpotlight #orbitBulb{box-shadow:0 0 35px 14px #32fa85}
-
-#sujiLandingStars{font-size:25px;color:#ffe38a;margin:12px 0}#sujiPilotRank{font-weight:800;color:#f4c76a;margin-left:8px}
-
-/* V7c: isolated Level 3 cockpit; Level 1 and Level 2 CSS retained. */
-#level3{background:#081323;color:white}#level3 header{display:flex;align-items:center;justify-content:space-between;padding:10px 20px}#level3Arena{position:relative;flex:1;min-height:0;overflow:hidden;background:#061327}#level3Canvas{width:100%;height:100%;display:block}#level3Map{position:absolute;right:16px;top:16px;width:min(25vw,260px);height:auto;border:2px solid #b28d52;border-radius:12px;background:#13253a}#level3Dashboard{position:absolute;bottom:6%;left:16%;right:16%;display:flex;justify-content:space-around;align-items:center;gap:8px;pointer-events:none;font-size:clamp(12px,1.4vw,18px);font-weight:700}#level3Dashboard button{pointer-events:auto;background:#13283b;color:#d6f6ff;border:2px solid #bd9752;border-radius:12px;padding:10px}#level3RingCount{font-size:12px}#level3Voice{position:absolute;top:12px;left:15%;right:30%;text-align:center;color:#a7efff;font-size:clamp(16px,2vw,24px);font-weight:800;text-shadow:0 2px 8px #000}#level3Controls{position:absolute;bottom:17%;left:5%;right:5%;display:flex;justify-content:space-between;pointer-events:none}#level3Controls button{width:112px;height:112px;border-radius:50%;font-size:44px;color:#fff;background:#162b46dd;border:3px solid #e8bd68;pointer-events:auto;touch-action:none}#level3Overlay{position:absolute;inset:0;background:#071226cf;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:22px;font-size:clamp(22px,3vw,38px);font-weight:800;text-align:center;padding:40px}#level3Overlay button{font-size:22px;padding:16px 28px;border-radius:15px;background:#ffd078;color:#17243a}#level3Overlay.hidden{display:none}@media(max-width:850px){#level3Controls button{width:90px;height:90px}#level3Dashboard{left:12%;right:12%;bottom:4%}#level3Map{width:180px}}
-
-#level3FactsPanel{position:absolute;inset:12% 20%;background:#12263aee;color:#fff;border:2px solid #edc474;border-radius:20px;padding:30px;overflow:auto;z-index:20;font-size:20px}#level3FactsPanel.hidden{display:none}#level3FactsPanel button{padding:12px;border-radius:10px;background:#ffcf7a;color:#18253c}#level3Dashboard #level3Facts{font-size:12px;padding:6px}

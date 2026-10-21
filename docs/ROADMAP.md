@@ -2,14 +2,15 @@
 
 Update this file after every version (see CLAUDE.md).
 
-## Now – after the V7c.1 release (2026-10-21)
-V7c.1 is live (commit 15b1383). Done: Stage (d) audit, V7c.1 fixes, release.
-1. Vikas plays the LIVE game on the real iPad (with Suji): Level 3 fairness and both planets,
-   ◀ ▶ easy to hit, Levels 1/2 feel unchanged, "Preparing deep space…" wait acceptable,
-   rotate during flight. Write down anything odd.
-2. If the iPad shows a problem: roll back with `git revert 15b1383` on v7b-development (V7b.5
-   returns), then fix through Codex.
-3. Small tidy-up for the next round (V7c.2, not urgent):
+## Now – V7c.2: Level 3 start-screen visibility (2026-10-21)
+V7b.5 is live again (rollback 80140eb). V7c.1 was released, then rolled back after the iPad test.
+1. Codex: codex-work/FIX_V7c2_PROMPT.txt. Zoom the start view to the bodies; planets ≥64 px,
+   holes ≥56 px; target halo plus "BLUE PLANET - land here!"; level3.js only.
+2. Claude audits the new zip, including a NEW standing check: on-screen pixel size of planets,
+   holes and the target cue on every screen, at all 6 iPad viewports.
+3. Vikas tests on the real iPad BEFORE release this time (e.g. Home Wi-Fi server or a test folder).
+4. Release: Claude verifies and pushes; then updates this file and VERSION_LOG.md.
+5. Small tidy-up items, can go into V7c.2:
    - add `<link rel="icon" href="data:,">` to root `index.html` (stops the /favicon.ico 404);
    - regenerate `SHA256SUMS.txt` in the packaged zip after any file change.
 4. Copy the released zip to `Downloads\Suji Captain\` as the new release copy (Vikas's OK first).

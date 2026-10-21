@@ -145,3 +145,13 @@ Claude's own measurements (own Node/CDP harness, plain static server, Chrome hea
 - Codex made the release commit offline (its sandbox has no network): 15b1383 on v7b-development, parent a875009. Claude verified all 25 DEPLOY files in the commit are byte-identical to zip c49a28e3 (line endings preserved with core.autocrlf=false), and only game/ files changed. Claude pushed. main untouched (c9aeacd).
 - Live check: all 25 files from yodaa101-collab.github.io/captain-suji-black-hole match the zip (13:32). tinyurl.com/CaptainSuji → …/game/ 200. Full L3 mission flown on the live site (layout 6): both legs landed, gap 0, 0 errors.
 - Released BEFORE a real-iPad test (Vikas's decision). Rollback if needed: `git revert 15b1383` on v7b-development.
+
+## 2026-10-21 (afternoon) – iPad test of LIVE V7c.1: Level 3 start screen – planets too small (MISSED BY CLAUDE'S AUDIT)
+- Vikas on the real iPad: at the Level 3 start the planets (esp. the blue target) are not visible / too small.
+- Measured on the live site (start view = whole 6400x5400 world fitted above the dashboard): planet globe 16 px (1024x768), 18 px (1180x820, 1194x834), 23 px (1366x1024), 25 px (820x1180), 31 px (1024x1366). Holes 27–51 px. Map uses ~half the width in landscape. Ship fixed 56 px (3x a planet). Dark-blue planet on black, no labels.
+- My miss: the layout check covered overlaps and button sizes, but not the size of objects drawn on the canvas or which planet is the target. New standing check for every build: on-screen size (pixels) of planets, holes and target cue on every screen, at every viewport.
+- Fix prompt: codex-work/FIX_V7c2_PROMPT.txt (zoom the start view to the bodies, planets >=64 px, holes >=56 px, target halo + "BLUE PLANET - land here!" labels; level3.js only).
+
+## 2026-10-21 – ROLLBACK to V7b.5 (Vikas's decision)
+- `git revert 15b1383` → commit 80140eb on v7b-development, pushed by Claude. Game files are identical to the pre-release live commit 504a24a (checked with git diff). main untouched (c9aeacd). The docs were not touched by the revert.
+- Next: V7c.2 (codex-work/FIX_V7c2_PROMPT.txt) → Claude audit incl. the new pixel-size check → iPad test BEFORE release.

@@ -78,6 +78,9 @@ Python 3.13 and Chrome are available. Never stop a running Codex background test
   - wild starts (launch up to 80° off + 0–4 s random steering): ORBIT shows a route ≥90–95%,
     and following it lands ≥95%.
 - Landing: ship touches the planet surface (gap ≤3 px); no frame-to-frame jump >4% of screen width.
+- Visibility (added after the V7c.1 rollback): measure from screenshot pixels the size of everything drawn on
+  the canvas, on EVERY screen (start/aim, flight, landing, result) at all iPad viewports. The target must be
+  obvious at a glance. V7c.1 shipped with 16–23 px planets on the Level 3 start screen.
 - Level 1 and Level 2 regression: unchanged behaviour unless the prompt says otherwise.
 - Report every number. If a target fails, report the measured number and write a short fix
   prompt for Codex. Never call a build ready without measurements.

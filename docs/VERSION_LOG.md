@@ -9,9 +9,19 @@ repo's git history, `README.md` and `test-results.txt`.
 
 ---
 
-## V7c.1 – Level 3 Deep Space Mission (LIVE)
-**Date:** 2026-10-21 · **Status:** LIVE on v7b-development (commit 15b1383, zip SHA c49a28e3…).
+## ROLLBACK – V7b.5 live again
+**Date:** 2026-10-21 · commit 80140eb reverts 15b1383. Game files are identical to the
+pre-release live commit 504a24a. Reason: Vikas's iPad test of V7c.1 found the Level 3 start-screen
+planets too small to see (16–23 px in landscape). The fix is V7c.2 (codex-work/FIX_V7c2_PROMPT.txt).
+
+## V7c.1 – Level 3 Deep Space Mission (ROLLED BACK)
+**Date:** 2026-10-21 · **Status:** was live 13:32–about 13:45 (commit 15b1383, zip SHA c49a28e3…), then rolled back.
 Released before a real-iPad test, by Vikas's decision.
+- **iPad finding (Vikas):** at the Level 3 start (aim) the planets are almost invisible.
+  Measured planet globe: 16 px (1024×768), 18 px (1180×820 / 1194×834), 23 px (1366×1024),
+  25 px (820×1180), 31 px (1024×1366). Holes 27–51 px. The ship is a fixed 56 px. The start view fits the whole
+  6400×5400 world, so the map uses about half the width. No target label. Claude's audit missed this: it
+  did not measure the size of objects drawn on the canvas.
 - **Changes vs Stage (d) zip 102be8d0:** only `level3.js` and `deep-cockpit.css`. If the ORBIT
   worker fails twice, the game no longer throws an error. Level 3 steering buttons go from 92 to 96 px. The flight hint
   is cleared on the result card. The button now says "Launch from the blue planet".
@@ -107,7 +117,7 @@ S3/S4, aggregate PASS. Claude's audit (2026-10-21): every non-negotiable passed 
   blue planet.
 
 ## V7b.5 – richer ORBIT routes
-**Date:** 2026-10-17 · **Status:** was live on v7b-development until 2026-10-21 (commit 504a24a); replaced by V7c.1
+**Date:** 2026-10-17 · **Status:** LIVE on v7b-development (commit 504a24a; replaced by V7c.1 for about 15 minutes on 2026-10-21, then restored by revert 80140eb)
 - **Changes:** 25-second segmented ORBIT worker search, 1500-unit soft world boundary,
   45-second flight limit, off-path recovery advice, map auto-framing, explicit left/right ORBIT
   arrows, forced fresh cockpit assets.

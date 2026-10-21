@@ -783,3 +783,47 @@ Branch: v7b-development ONLY (GitHub Pages serves it). Never touch or push branc
    https://yodaa101-collab.github.io/captain-suji-black-hole/ and compare SHA256 with the
    zip. Report the commit hash and a PASS/FAIL per file. STOP.
 ```
+
+## V7c.2 URGENT – Level 3 start-screen visibility (2026-10-21) – file: codex-work/FIX_V7c2_PROMPT.txt
+
+```
+V7c.2 - URGENT visibility fix for the Level 3 START (aim) screen. Found by Vikas on the real iPad.
+
+PROBLEM (measured by Claude on the live site): at the start of Level 3 the whole 6400x5400 world is
+squeezed into the area above the dashboard (aimScale in level3.js). Planets are drawn 220 world
+units wide, so on screen the planet globe is only:
+  1024x768: 16 px | 1180x820: 18 px | 1194x834: 18 px | 1366x1024: 23 px | 820x1180: 25 px | 1024x1366: 31 px
+Black holes are 27-51 px. The map uses only about half the screen width in landscape. The ship is drawn at a fixed 56 px,
+so it looks 3x bigger than the planets. The dark blue planet on black space is almost invisible, and nothing
+says which planet to fly to. Suji (8) could not see the blue planet.
+
+FIX - change ONLY game/level3.js (and deep-cockpit.css if needed). No physics, planner, worker or
+Level 1/2 changes. Launch rules and launch speed must stay the same.
+1. Zoom the start view: fit the bounding box of the start point, both black holes and both
+   planets (plus about 400 world units of margin) into the WHOLE canvas area above the dashboard,
+   using the full width. Do not fit the whole 6400x5400 world.
+   Use the SAME transform for drawing and for the touch/pull-back launch input. aimScale() is
+   also used by input and tests, so update every user of it together.
+2. Minimum on-screen sizes in the start view: each planet globe >= 64 CSS px wide, each black
+   hole >= 56 CSS px, at every size below. Keep the ship in proportion (no bigger than about 1.2x a planet).
+3. Make the target obvious, in the picture and not as extra text-only guidance:
+   - target planet (blue on leg 1, green on leg 2): bright glow halo plus a slowly pulsing ring,
+     and a short label beside it: "BLUE PLANET - land here!" (leg 2: "GREEN PLANET - land here!");
+   - the other planet: small dim label ("GREEN PLANET - next" on leg 1);
+   - each black hole: small label "BLACK HOLE" in orange/red.
+   Labels must not overlap each other, the ship, the pull line, the top hint or the dashboard.
+4. Leg 2 starts on the blue planet's surface: same rules (green target halo + label, sizes).
+
+ACCEPTANCE - measure from screenshot PIXELS (not from the formula) at 1024x768, 1180x820, 1194x834,
+1366x1024, 820x1180 and 1024x1366, all 12 layouts, legs 1 and 2:
+- planet globe >= 64 px wide, black hole >= 56 px, the target halo is visible, labels inside the canvas with
+  no overlaps (report the worst case per viewport);
+- a real launch by pulling back from the ship still works and launches at the same angle and speed
+  as before for the same drag (show 3 examples, before and after);
+- 0 console errors; frame p95 <= 17.5 ms at 1x and <= 25 ms at 4x CPU on the start screen;
+- rerun stress S1-S4 for Level 3 (both orientations) and the plain static-server test.
+Save before/after screenshots of the start screen at every viewport in evidence/v7c.2/.
+Report the level3.js SHA256 and confirm all other files are byte-identical to zip c49a28e3.
+Package Captain_Suji_V7c.zip, verify the SHA256 and STOP. Do NOT push or deploy (Claude will
+verify and push).
+```
